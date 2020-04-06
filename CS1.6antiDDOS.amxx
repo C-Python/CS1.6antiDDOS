@@ -1,0 +1,30 @@
+#include <amxmodx>
+#include <orpheu>
+
+const A2S_ACK = 'j';
+
+public plugin_init() {
+    
+
+    register_plugin(
+                     "Blocking A2S_ACK",
+                     "0.1",
+                     "Spawner"
+    )
+    
+    OrpheuRegisterHook(OrpheuGetFunction("SV_ConnectionlessPacket"), "SV_ConnectionlessPacket_Hook");
+
+}
+
+
+public OrpheuHookReturn:SV_ConnectionlessPacket_Hook(
+                        netFrom[],messageArg[]
+)   {
+    
+    read_argv(0, messageArg, 2); 
+    if( messageArg[0] == A2S_ACK )  {
+        return OrpheuSupercede;
+    }
+    
+    return OrpheuIgnored;
+}
